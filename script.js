@@ -1,37 +1,56 @@
 const apiKey = "8a9d4fa13d33034d39fed0eb756aa49b";
 
-const fetchStatistics = async () => {
-  const eventsContainer = document.getElementById("events-container");
-  eventsContainer.innerHTML = "<p>Loading statistics...</p>";
+async function fetchOdds() {
+  const response = await fetch(
+    `https://api.the-odds-api.com/v4/sports/upcoming/?apiKey=${apiKey}&dateFrom=2024-12-01&dateTo=2024-12-02`
+  );
+  const data = await response.json();
 
-  try {
-    const response = await fetch(
-      `https://api.the-odds-api.com/v4/sports/upcoming/?apiKey=${apiKey}&dateFrom=2024-12-01&dateTo=2024-12-02`
-    );
-    const data = await response.json();
+  const container = document.getElementById("odds-container");
+  container.innerHTML = ""; // Clear loading message
 
-    if (data.length === 0) {
-      eventsContainer.innerHTML = "<p>No statistics found for the selected dates.</p>";
-      return;
-    }
-
-    const statsHTML = data
-      .map(
-        (event) => `
-      <div class="event">
-        <h3>${event.home_team} vs ${event.away_team}</h3>
-        <p><strong>Sport:</strong> ${event.sport_title}</p>
-        <p><strong>Date:</strong> ${new Date(event.commence_time).toLocaleString()}</p>
-        <p><strong>Odds:</strong> Home - ${event.bookmakers[0]?.markets[0]?.outcomes[0]?.price || "N/A"}, Away - ${event.bookmakers[0]?.markets[0]?.outcomes[1]?.price || "N/A"}</p>
-      </div>
-    `
-      )
-      .join("");
-    eventsContainer.innerHTML = statsHTML;
-  } catch (error) {
-    console.error("Error fetching statistics:", error);
-    eventsContainer.innerHTML = "<p>Error fetching statistics. Please try again later.</p>";
+  if (data.length === 0) {
+    container.innerHTML = "<p>No upcoming events found.</p>";
+    return;
   }
-};
 
-document.addEventListener("DOMContentLoaded", fetchStatistics);
+  data.forEach(event => {
+    const eventDiv = document.createElement("div");
+    eventDiv.classList.add("event");
+
+    const title = document.createElement("h3");
+    title.textContent = `${event.sport_title}: ${event.home_team} vs. ${event.away_team}`;
+    eventDiv.appendChild(title);
+
+    const commenceTime = document.createElement("p");
+    commenceTime.textContent = `Start Time: ${new Date(
+      event.commence_time
+    ).toLocaleString()}`;
+    eventDiv.appendChild(commenceTime);
+
+    event.bookmakers.forEach(bookmaker => {
+      const bookmakerDiv = document.createElement("div");
+      bookmakerDiv.classList.add("bookmaker");
+
+      const bookmakerTitle = document.createElement("h4");
+      bookmakerTitle.textContent = `${bookmaker.title}`;
+      bookmakerDiv.appendChild(bookmakerTitle);
+
+      bookmaker.markets.forEach(market => {
+        if (market.key === "h2h") {
+          market.outcomes.forEach(outcome => {
+            const outcomeP = document.createElement("p");
+            outcomeP.textContent = `${outcome.name}: ${outcome.price}`;
+            bookmakerDiv.appendChild(outcomeP);
+          });
+        }
+      });
+
+      eventDiv.appendChild(bookmakerDiv);
+    });
+
+    container.appendChild(eventDiv);
+  });
+}
+
+fetchOdds();

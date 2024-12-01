@@ -29,21 +29,13 @@ section {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Gumb */
-button {
-  display: block;
-  margin: 20px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #218838;
+/* Dinamična vsebina */
+#dynamic-content {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #eef;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 /* Noga strani */
@@ -53,4 +45,5 @@ footer {
   background-color: #222;
   color: white;
 }
+
 

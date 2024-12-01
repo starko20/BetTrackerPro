@@ -1,71 +1,36 @@
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("BetTrackerPro Loaded!");
+const apiKey = "8a9d4fa13d33034d39fed0eb756aa49b";
 
-  const mainContent = document.getElementById("main-content");
+const fetchEvents = async () => {
+  const eventsContainer = document.getElementById("events-container");
+  eventsContainer.innerHTML = "<p>Loading events...</p>";
 
-  // Funkcija za nalaganje vsebine
-  function loadContent(page) {
-    switch (page) {
-      case "home":
-        mainContent.innerHTML = `
-          <section>
-            <h2>Welcome to BetTrackerPro</h2>
-            <p>Track your betting statistics and make smarter decisions!</p>
-          </section>`;
-        break;
-      case "register":
-        mainContent.innerHTML = `
-          <section>
-            <h2>Register</h2>
-            <form id="register-form">
-              <label for="username">Username:</label>
-              <input type="text" id="username" required>
-              <label for="password">Password:</label>
-              <input type="password" id="password" required>
-              <button type="submit">Register</button>
-            </form>
-          </section>`;
-        document.getElementById("register-form").addEventListener("submit", (e) => {
-          e.preventDefault();
-          alert("User registered!");
-        });
-        break;
-      case "login":
-        mainContent.innerHTML = `
-          <section>
-            <h2>Login</h2>
-            <form id="login-form">
-              <label for="username">Username:</label>
-              <input type="text" id="username" required>
-              <label for="password">Password:</label>
-              <input type="password" id="password" required>
-              <button type="submit">Login</button>
-            </form>
-          </section>`;
-        document.getElementById("login-form").addEventListener("submit", (e) => {
-          e.preventDefault();
-          alert("User logged in!");
-        });
-        break;
-      case "membership":
-        mainContent.innerHTML = `
-          <section>
-            <h2>Membership</h2>
-            <p>Subscribe for premium features:</p>
-            <button id="subscribe">Subscribe for $5/month</button>
-          </section>`;
-        document.getElementById("subscribe").addEventListener("click", () => {
-          alert("Membership activated!");
-        });
-        break;
-      default:
-        mainContent.innerHTML = "<p>Page not found!</p>";
+  try {
+    const response = await fetch(
+      `https://api.the-odds-api.com/v4/sports/upcoming/?apiKey=${apiKey}&dateFrom=2024-12-01&dateTo=2024-12-02`
+    );
+    const data = await response.json();
+
+    if (data.length === 0) {
+      eventsContainer.innerHTML = "<p>No events found for the selected dates.</p>";
+      return;
     }
-  }
 
-  // Dodajanje event listenerjev za zavihke
-  document.getElementById("home").addEventListener("click", () => loadContent("home"));
-  document.getElementById("register").addEventListener("click", () => loadContent("register"));
-  document.getElementById("login").addEventListener("click", () => loadContent("login"));
-  document.getElementById("membership").addEventListener("click", () => loadContent("membership"));
-});
+    const eventsHTML = data
+      .map(
+        (event) => `
+      <div class="event">
+        <h3>${event.home_team} vs ${event.away_team}</h3>
+        <p><strong>Sport:</strong> ${event.sport_title}</p>
+        <p><strong>Date:</strong> ${new Date(event.commence_time).toLocaleString()}</p>
+      </div>
+    `
+      )
+      .join("");
+    eventsContainer.innerHTML = eventsHTML;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    eventsContainer.innerHTML = "<p>Error fetching events. Please try again later.</p>";
+  }
+};
+
+fetchEvents();

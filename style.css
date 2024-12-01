@@ -1,13 +1,13 @@
-/* Splošni stil */
+/* Global styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #f9f9f9;
   color: #333;
 }
 
-/* Glava strani */
+/* Header */
 header {
   text-align: center;
   background-color: #222;
@@ -15,7 +15,29 @@ header {
   padding: 20px 0;
 }
 
-/* Glavni del strani */
+header nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+header nav ul li {
+  display: inline;
+}
+
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+header nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Main content */
 main {
   padding: 20px;
 }
@@ -29,21 +51,10 @@ section {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Dinamična vsebina */
-#dynamic-content {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #eef;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-/* Noga strani */
+/* Footer */
 footer {
   text-align: center;
   padding: 10px 0;
   background-color: #222;
   color: white;
 }
-
-

@@ -1,1 +1,4 @@
-document.body.innerHTML = "<h1>BetTrackerPro Loaded Successfully!</h1>";
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("BetTrackerPro Loaded");
+  alert("Welcome to BetTrackerPro!");
+});
